@@ -1,4 +1,4 @@
-export type Topic = 'Bài 1' | 'Bài 2' | 'Bài 3' | 'Bài 4' | 'Bài 5' | 'Bài 6' | 'Phụ lục'
+export type Topic = 'Bài 1' | 'Bài 2' | 'Bài 3' | 'Bài 4' | 'Bài 5' | 'Bài 6' | 'Phụ lục' | 'Đề khó'
 
 export type QuizMode = 'practice' | 'topic' | 'exam'
 
