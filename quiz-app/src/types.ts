@@ -12,7 +12,13 @@ export type Question = {
   source: string
 }
 
-export type SessionQuestion = Question & {
-  shuffledOptions: string[]
-  answer: number
+export type QuizPool = 'basic' | 'hard' | 'topic'
+
+export type SavedResult = {
+  score: number
+  total: number
+  completedAt: string
+  mode: QuizMode
+  poolTitle: string
+  durationSeconds?: number
 }
