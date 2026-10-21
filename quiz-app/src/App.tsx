@@ -27,7 +27,7 @@ function App() {
   })
 
   const beginQuiz = (mode: QuizMode, topic?: Topic) => {
-    const pool = topic ? questions.filter((item) => item.topic === topic) : questions
+    const pool = topic ? questions.filter((item) => item.topic === topic) : questions.filter((item) => item.topic !== 'Đề khó')
     const items = shuffle(pool).map((item) => {
       const shuffledOptions = shuffle(item.options.map((text, index) => ({ text, isAnswer: index === item.answer })))
       return { ...item, options: shuffledOptions.map((option) => option.text), answer: shuffledOptions.findIndex((option) => option.isAnswer) }
@@ -55,9 +55,9 @@ function App() {
       <header className="topbar">
         <button className="brand" onClick={reset} aria-label="Về trang chủ">
           <span className="brand-mark">N</span>
-          <span><strong>NCKH</strong><small>SPRINT / 90</small></span>
+          <span><strong>NCKH</strong><small>SPRINT / 50 + 40</small></span>
         </button>
-        <div className="topbar-meta"><span className="live-dot" /> Kho kiến thức 6 bài + đề khó</div>
+        <div className="topbar-meta"><span className="live-dot" /> 50 câu cơ bản · 40 câu siêu khó</div>
       </header>
       <main>
         {screen === 'home' && <HomeScreen onStart={beginQuiz} savedResult={savedResult} />}
@@ -79,23 +79,38 @@ function HomeScreen({ onStart, savedResult }: { onStart: (mode: QuizMode, topic?
           <p className="eyebrow">Nghiên cứu khoa học / phiên ôn tập 01</p>
           <h1>Học chắc.<br /><em>Nhớ lâu.</em></h1>
           <p className="hero-description">Bộ câu hỏi trắc nghiệm được chắt lọc từ 6 bài giảng, giúp bạn đi từ khái niệm đến phản xạ làm bài.</p>
-          <div className="hero-actions"><button className="primary-button" onClick={() => onStart('practice')}>Bắt đầu ôn tập <span>↗</span></button><span className="hero-caption">90 câu / trộn ngẫu nhiên</span></div>
+          <div className="hero-actions"><button className="primary-button" onClick={() => onStart('practice')}>Bắt đầu ôn tập <span>↗</span></button><span className="hero-caption">50 câu cơ bản / trộn ngẫu nhiên</span></div>
         </div>
-        <div className="hero-stamp"><span>7</span><small>chủ đề<br />cốt lõi</small><b>+</b><span>90</span><small>câu hỏi<br />thực chiến</small></div>
+        <div className="hero-stamp"><span>6</span><small>chủ đề<br />cốt lõi</small><b>+</b><span>50</span><small>câu hỏi<br />thực chiến</small></div>
       </section>
 
       <section className="mode-section">
-        <div className="section-heading"><div><p className="eyebrow">Chọn nhịp học</p><h2>Bắt đầu theo cách của bạn</h2></div><span className="section-index">01 / 03</span></div>
+        <div className="section-heading"><div><p className="eyebrow">50 câu cơ bản</p><h2>Bắt đầu theo cách của bạn</h2></div><span className="section-index">01 / 04</span></div>
         <div className="mode-grid">
-          <ModeCard number="01" title="Ôn toàn bộ" description="Lướt qua 90 câu, xem đáp án và giải thích ngay sau mỗi lựa chọn." action="Ôn 90 câu" onClick={() => onStart('practice')} featured />
+          <ModeCard number="01" title="Ôn toàn bộ" description="Lướt qua 50 câu cơ bản, xem đáp án và giải thích ngay sau mỗi lựa chọn." action="Ôn 50 câu" onClick={() => onStart('practice')} featured />
           <ModeCard number="02" title="Theo bài" description="Tập trung vào một chủ đề đang cần củng cố nhất." action="Chọn bài" onClick={() => document.getElementById('topics')?.scrollIntoView({ behavior: 'smooth' })} />
-          <ModeCard number="03" title="Thi thử" description="90 câu, không bật mí đáp án. Chấm điểm sau khi nộp bài." action="Vào phòng thi" onClick={() => onStart('exam')} />
+          <ModeCard number="03" title="Thi thử" description="50 câu cơ bản, không bật mí đáp án. Chấm điểm sau khi nộp bài." action="Vào phòng thi" onClick={() => onStart('exam')} />
+        </div>
+      </section>
+
+      <section className="hard-section">
+        <div className="section-heading"><div><p className="eyebrow">Thử thách bản thân</p><h2>Đề siêu khó</h2></div><span className="section-index">02 / 04</span></div>
+        <div className="hard-banner">
+          <div className="hard-banner-copy">
+            <span className="hard-badge">🔥 40 CÂU</span>
+            <h3>Vận dụng & Suy luận</h3>
+            <p>Tình huống thực tế, phân tích liên bài, đòi hỏi hiểu sâu chứ không chỉ nhớ. Sẵn sàng chưa?</p>
+          </div>
+          <div className="hard-banner-actions">
+            <button className="primary-button hard-btn" onClick={() => onStart('practice', 'Đề khó')}>Luyện đề khó <span>↗</span></button>
+            <button className="outline-button hard-btn" onClick={() => onStart('exam', 'Đề khó')}>Thi thử đề khó</button>
+          </div>
         </div>
       </section>
 
       <section className="topics-section" id="topics">
-        <div className="section-heading"><div><p className="eyebrow">Lộ trình 6 bài + Đề khó</p><h2>Chọn một mảng để đào sâu</h2></div><span className="section-index">02 / 03</span></div>
-        <div className="topic-list">{topics.map((topic, index) => <button className={`topic-row ${selectedTopic === topic ? 'selected' : ''}`} key={topic} onClick={() => setSelectedTopic(topic)}><span className="topic-number">{String(index + 1).padStart(2, '0')}</span><span className="topic-color" style={{ backgroundColor: topicMeta[topic].color }} /><span className="topic-name"><strong>{topicMeta[topic].label}</strong><small>{topicMeta[topic].note}</small></span><span className="topic-count">{questions.filter((item) => item.topic === topic).length} câu</span><span className="row-arrow">↗</span></button>)}</div>
+        <div className="section-heading"><div><p className="eyebrow">Lộ trình 6 bài</p><h2>Chọn một mảng để đào sâu</h2></div><span className="section-index">03 / 04</span></div>
+        <div className="topic-list">{topics.filter(t => t !== 'Đề khó').map((topic, index) => <button className={`topic-row ${selectedTopic === topic ? 'selected' : ''}`} key={topic} onClick={() => setSelectedTopic(topic)}><span className="topic-number">{String(index + 1).padStart(2, '0')}</span><span className="topic-color" style={{ backgroundColor: topicMeta[topic].color }} /><span className="topic-name"><strong>{topicMeta[topic].label}</strong><small>{topicMeta[topic].note}</small></span><span className="topic-count">{questions.filter((item) => item.topic === topic).length} câu</span><span className="row-arrow">↗</span></button>)}</div>
         <div className="topic-cta"><div><span className="eyebrow">Đang chọn</span><strong>{topicMeta[selectedTopic].label}</strong><small>{topicMeta[selectedTopic].note}</small></div><button className="dark-button" onClick={() => onStart('topic', selectedTopic)}>Luyện bài này <span>→</span></button></div>
       </section>
 
